@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "845502919168",
+    "project_id": "fitness-life-7f19b",
+    "storage_bucket": "fitness-life-7f19b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845502919168:android:0e0d9eea907b4b43961ee5",
+        "android_client_info": {
+          "package_name": "com.brisley.fitness_life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5SWUTx3YQkHrccRoaObEik98-Sg1XOHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845502919168:android:c8712cb332c98bdc961ee5",
+        "android_client_info": {
+          "package_name": "com.example.fitness_life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5SWUTx3YQkHrccRoaObEik98-Sg1XOHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:845502919168:android:592d9d449c5e3c8b961ee5",
+        "android_client_info": {
+          "package_name": "com.fitnessislife.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5SWUTx3YQkHrccRoaObEik98-Sg1XOHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

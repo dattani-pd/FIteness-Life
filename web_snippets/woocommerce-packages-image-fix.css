@@ -1,0 +1,66 @@
+/**
+ * WooCommerce Packages / Product archive – fix product image size
+ * Use on fitnessislife.org: WordPress Admin → Appearance → Customize → Additional CSS
+ * (or add to your theme's style.css / child theme)
+ *
+ * Sets product image to fixed height 200px, 4:3-friendly aspect, cover fit, rounded corners.
+ */
+
+/* ========== Product loop image container – fixed 200px height ========== */
+.woocommerce ul.products li.product .woocommerce-loop-product__link {
+  display: block !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__link img,
+.woocommerce ul.products li.product a img {
+  width: 100% !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 12px !important;
+  display: block !important;
+}
+
+/* Theme uses .attachment-woocommerce_thumbnail or figure */
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail,
+.woocommerce ul.products li.product figure img,
+.woocommerce ul.products li.product .post_class img {
+  width: 100% !important;
+  height: 200px !important;
+  max-height: 200px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 12px !important;
+}
+
+/* Wrapper for themes that use div/figure around the image */
+.woocommerce ul.products li.product figure,
+.woocommerce ul.products li.product .product-image,
+.woocommerce ul.products li.product .product-thumbnail {
+  height: 200px !important;
+  max-height: 200px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+}
+
+.woocommerce ul.products li.product figure img,
+.woocommerce ul.products li.product .product-image img,
+.woocommerce ul.products li.product .product-thumbnail img {
+  width: 100% !important;
+  height: 200px !important;
+  object-fit: cover !important;
+  border-radius: 12px !important;
+}
+
+/* Placeholder / missing image – same 200px height */
+.woocommerce ul.products li.product img.woocommerce-placeholder,
+.woocommerce ul.products li.product img[src*="placeholder"] {
+  height: 200px !important;
+  min-height: 200px !important;
+  object-fit: cover !important;
+}

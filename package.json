@@ -1,0 +1,9 @@
+{
+  "name": "fitness-life-api",
+  "version": "1.0.0",
+  "description": "Vercel serverless API (WooCommerce sync, etc.)",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
