@@ -67,10 +67,25 @@ void main() async {
 
     // 5. Other Inits (Your existing code)
     // await sharedPreferencesHelper.getSharedPreferencesInstance(); // Uncomment if needed
-    await AppConstants.loadFromPrefs();
-    await AppConstants.loadTheme();
+    await AppConstants.loadFromPrefs().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        print('⚠️ loadFromPrefs timeout, continuing with defaults');
+      },
+    );
+    await AppConstants.loadTheme().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        print('⚠️ loadTheme timeout, continuing with defaults');
+      },
+    );
     Get.put(MuscleWikiController());
-    await GetStorage.init();
+    await GetStorage.init().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        print('⚠️ GetStorage init timeout, continuing');
+      },
+    );
 
     print("🚀 APP READY - Running App");
     runApp(const MyApp());

@@ -31,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
     // Safety net: if something prevents navigation, force it after a few seconds.
     Future.delayed(const Duration(seconds: 6), () {
       if (!mounted) return;
-      if (Get.currentRoute != SplashScreen.pageId) return;
 
       final user = Firebase.apps.isNotEmpty
           ? FirebaseAuth.instance.currentUser
