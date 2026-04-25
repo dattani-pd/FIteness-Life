@@ -95,7 +95,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
         return;
       }
 
-      DocumentSnapshot userDoc = await _db.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc = await _db!.collection('users').doc(uid).get();
 
       if (userDoc.exists && userDoc.data() != null) {
         Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
