@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_life/screen/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,8 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
   late Animation<Offset> slideAnimation;
   late Animation<double> scaleAnimation;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  FirebaseAuth? _auth;
+  FirebaseFirestore? _db;
 
   @override
   void onInit() {
@@ -26,7 +27,21 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
     scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(CurvedAnimation(parent: animController, curve: Curves.elasticOut));
     animController.forward();
 
+    _initializeFirebaseServices();
     _initializationSequence();
+  }
+
+  void _initializeFirebaseServices() {
+    try {
+      if (Firebase.apps.isNotEmpty) {
+        _auth = FirebaseAuth.instance;
+        _db = FirebaseFirestore.instance;
+      } else {
+        print("⚠️ Firebase app not available in SplashController.");
+      }
+    } catch (e) {
+      print("⚠️ Firebase service init failed in SplashController: $e");
+    }
   }
 
   void _initializationSequence() async {
@@ -35,14 +50,14 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
 
       final String localRole = AppConstants.role;
       final String localUserId = AppConstants.userId;
-      final String? authUid = _auth.currentUser?.uid;
+      final String? authUid = _auth?.currentUser?.uid;
 
       print("🟦 Splash init: localUserId=$localUserId localRole=$localRole authUid=$authUid");
 
       // 1. Trainer Check: Must verify approval with Firebase if local role is 'trainer'
       if (localUserId.isNotEmpty && localRole == 'trainer') {
         print("🔄 Trainer detected: Verifying approval status...");
-        final firebaseUser = _auth.currentUser;
+        final firebaseUser = _auth?.currentUser;
         if (firebaseUser != null) {
           await _fetchAndSaveUserData(firebaseUser.uid);
           return;
@@ -57,7 +72,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
       }
 
       // 3. Fallback: Check Firebase
-      final firebaseUser = _auth.currentUser;
+      final firebaseUser = _auth?.currentUser;
       if (firebaseUser != null) {
         print("🌐 Syncing: Fetching fresh data...");
         await _fetchAndSaveUserData(firebaseUser.uid);
@@ -74,6 +89,12 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
 
   Future<void> _fetchAndSaveUserData(String uid) async {
     try {
+      if (_db == null) {
+        print("⚠️ Firestore unavailable, navigating to login.");
+        Get.offAllNamed(LoginScreen.pageId);
+        return;
+      }
+
       DocumentSnapshot userDoc = await _db.collection('users').doc(uid).get();
 
       if (userDoc.exists && userDoc.data() != null) {

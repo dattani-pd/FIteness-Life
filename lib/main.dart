@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_life/bindings/binding.dart';
 import 'package:fitness_life/controllers/controller.dart';
 import 'package:fitness_life/screen/screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -17,7 +18,11 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 // 1. BACKGROUND HANDLER
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  }
   print('🌙 BACKGROUND MESSAGE: ${message.notification?.title}');
 }
 
@@ -28,9 +33,15 @@ void main() async {
 
   try {
     // 2. Initialize Firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      // On iOS, prefer native GoogleService-Info.plist values.
+      // This avoids runtime mismatch issues if generated Dart options are stale.
+      await Firebase.initializeApp();
+    } else {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
     print('✅ Firebase initialized');
 
     // 3. Initialize Awesome Notifications
