@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import '../../controllers/splash_controller.dart';
 import 'screen.dart';
 
@@ -32,7 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       if (Get.currentRoute != SplashScreen.pageId) return;
 
-      final user = FirebaseAuth.instance.currentUser;
+      final user = Firebase.apps.isNotEmpty
+          ? FirebaseAuth.instance.currentUser
+          : null;
       if (user == null) {
         Get.offAllNamed(LoginScreen.pageId);
       } else {

@@ -38,9 +38,13 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
         _db = FirebaseFirestore.instance;
       } else {
         print("⚠️ Firebase app not available in SplashController.");
+        _auth = null;
+        _db = null;
       }
     } catch (e) {
       print("⚠️ Firebase service init failed in SplashController: $e");
+      _auth = null;
+      _db = null;
     }
   }
 
@@ -72,6 +76,12 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
       }
 
       // 3. Fallback: Check Firebase
+      if (Firebase.apps.isEmpty) {
+        print("❌ Firebase not initialized -> Login");
+        Get.offAllNamed(LoginScreen.pageId);
+        return;
+      }
+
       final firebaseUser = _auth?.currentUser;
       if (firebaseUser != null) {
         print("🌐 Syncing: Fetching fresh data...");

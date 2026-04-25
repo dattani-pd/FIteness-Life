@@ -1,5 +1,7 @@
 import Flutter
+import FirebaseCore
 import UIKit
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -7,6 +9,9 @@ import UIKit
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
 
         // Notifications callback disabled temporarily to bypass build errors
         // FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
@@ -14,8 +19,9 @@ import UIKit
         // }
 
         if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+            UNUserNotificationCenter.current().delegate = self
         }
+        application.registerForRemoteNotifications()
 
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)

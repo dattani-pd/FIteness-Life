@@ -15,12 +15,12 @@ import 'services/notification_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
+bool _firebaseReady = false;
+
 // 1. BACKGROUND HANDLER
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
-    await Firebase.initializeApp();
-  } else {
+  if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
   print('🌙 BACKGROUND MESSAGE: ${message.notification?.title}');
@@ -33,15 +33,12 @@ void main() async {
 
   try {
     // 2. Initialize Firebase
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
-      // On iOS, prefer native GoogleService-Info.plist values.
-      // This avoids runtime mismatch issues if generated Dart options are stale.
-      await Firebase.initializeApp();
-    } else {
+    if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
     }
+    _firebaseReady = true;
     print('✅ Firebase initialized');
 
     // 3. Initialize Awesome Notifications
@@ -64,7 +61,9 @@ void main() async {
     );
 
     // 4. Register Background Handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    if (_firebaseReady) {
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    }
 
     // 5. Other Inits (Your existing code)
     // await sharedPreferencesHelper.getSharedPreferencesInstance(); // Uncomment if needed
@@ -88,7 +87,8 @@ void main() async {
 
   } catch (e) {
     print("❌ CRITICAL ERROR in main: $e");
-    // Run app anyway so it doesn't crash on white screen
+    _firebaseReady = false;
+    // Run app anyway so user is not stuck on white/black screen.
     runApp(const MyApp());
   }
 }
