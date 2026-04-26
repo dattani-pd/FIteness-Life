@@ -16,6 +16,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
 
   FirebaseAuth? _auth;
   FirebaseFirestore? _db;
+  bool _hasNavigated = false;
 
   @override
   void onInit() {
@@ -78,7 +79,7 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
       // 3. Fallback: Check Firebase
       if (Firebase.apps.isEmpty) {
         print("❌ Firebase not initialized -> Login");
-        Get.offAllNamed(LoginScreen.pageId);
+        _safeNavigate(LoginScreen.pageId);
         return;
       }
 
@@ -88,12 +89,12 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
         await _fetchAndSaveUserData(firebaseUser.uid);
       } else {
         print("❌ No User -> Login");
-        Get.offAllNamed(LoginScreen.pageId);
+        _safeNavigate(LoginScreen.pageId);
       }
     } catch (e, st) {
       print("🔴 Splash init error: $e");
       print(st);
-      Get.offAllNamed(LoginScreen.pageId);
+      _safeNavigate(LoginScreen.pageId);
     }
   }
 
@@ -101,11 +102,15 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
     try {
       if (_db == null) {
         print("⚠️ Firestore unavailable, navigating to login.");
-        Get.offAllNamed(LoginScreen.pageId);
+        _safeNavigate(LoginScreen.pageId);
         return;
       }
 
-      DocumentSnapshot userDoc = await _db!.collection('users').doc(uid).get();
+      DocumentSnapshot userDoc = await _db!
+          .collection('users')
+          .doc(uid)
+          .get()
+          .timeout(const Duration(seconds: 8));
 
       if (userDoc.exists && userDoc.data() != null) {
         Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
@@ -121,11 +126,11 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
 
         _navigateBasedOnRole(role);
       } else {
-        Get.offAllNamed(LoginScreen.pageId);
+        _safeNavigate(LoginScreen.pageId);
       }
     } catch (e) {
       print("🔴 Error: $e");
-      Get.offAllNamed(LoginScreen.pageId);
+      _safeNavigate(LoginScreen.pageId);
     }
   }
 
@@ -134,12 +139,18 @@ class SplashController extends GetxController with GetTickerProviderStateMixin {
     if (role == 'trainer') {
       // Logic for Trainers: Check approval
 
-      Get.offAllNamed(MainNavigationScreen.pageId); // Go to Unified Home
+      _safeNavigate(MainNavigationScreen.pageId); // Go to Unified Home
 
     } else {
       // Logic for Admin & User: Go straight to Home
-      Get.offAllNamed(MainNavigationScreen.pageId); // Go to Unified Home
+      _safeNavigate(MainNavigationScreen.pageId); // Go to Unified Home
     }
+  }
+
+  void _safeNavigate(String route) {
+    if (_hasNavigated || !Get.isRegistered<SplashController>()) return;
+    _hasNavigated = true;
+    Get.offAllNamed(route);
   }
 
   @override
