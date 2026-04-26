@@ -85,7 +85,7 @@ class MainNavigationScreen extends StatelessWidget {
       ),
       child: SafeArea(
         child: SizedBox(
-          height: 65,
+          height: 72,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -110,7 +110,7 @@ class MainNavigationScreen extends StatelessWidget {
       onTap: () => controller.changePage(index),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -118,14 +118,14 @@ class MainNavigationScreen extends StatelessWidget {
             Icon(
                 icon,
                 color: isSelected ? activeColor : inactiveColor,
-                size: 28
+                size: 24
             ),
             const SizedBox(height: 4),
             Text(
                 label,
                 style: TextStyle(
                     color: isSelected ? activeColor : inactiveColor,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w500
                 )
             ),
