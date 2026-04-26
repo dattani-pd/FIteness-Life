@@ -1,28 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_life/screen/home/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../../controllers/controller.dart';
-import '../../controllers/home_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart'; // Make sure this is imported
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../exercises/new_ra.dart';
-import '../screen.dart'; // Make sure this is imported
-
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-// ⬇️ IMPORT YOUR CONTROLLERS & SCREENS ⬇️
 import '../../controllers/controller.dart';
 import '../../services/user_assignment_service.dart';
-
+import '../screen.dart';
 
 class HomeScreen extends GetView<HomeController> {
   static const pageId = "/HomeScreen";
@@ -36,28 +22,45 @@ class HomeScreen extends GetView<HomeController> {
     final scaffoldBg = isDark ? const Color(0xFF121212) : Colors.white;
     // const primaryRed = Color(0xFF8B0000); // Keeping red consistent as brand color
 
-    return Scaffold(
-      backgroundColor: scaffoldBg, // ✅ Dynamic BG
-      drawer: _buildDrawer(context),
-      appBar: AppBar(
-        backgroundColor: scaffoldBg, // ✅ Dynamic AppBar BG
-        elevation: 0,
-        iconTheme: IconThemeData(color: primaryBlack), // ✅ Dynamic Icon Color
-        title: Text(
-            "FITNESS IS LIFE",
-            style: TextStyle(color: primaryBlack, fontWeight: FontWeight.w900)
-        ),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.logout, color: Color(0xFF8B0000)),
-              onPressed: controller.logout
-          )
-        ],
+    final safe = MediaQuery.of(context).padding;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: scaffoldBg,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 40),
-          child: Column(
+      child: Scaffold(
+        backgroundColor: scaffoldBg, // ✅ Dynamic BG
+        drawer: _buildDrawer(context),
+        appBar: AppBar(
+          backgroundColor: scaffoldBg, // ✅ Dynamic AppBar BG
+          elevation: 0,
+          iconTheme: IconThemeData(color: primaryBlack), // ✅ Dynamic Icon Color
+          title: Text(
+              "FITNESS IS LIFE",
+              style: TextStyle(color: primaryBlack, fontWeight: FontWeight.w900)
+          ),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.logout, color: Color(0xFF8B0000)),
+                onPressed: controller.logout
+            )
+          ],
+        ),
+        body: SizedBox.expand(
+          child: Container(
+            color: scaffoldBg,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20 + safe.top,
+                bottom: 40 + safe.bottom,
+              ),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -96,6 +99,8 @@ class HomeScreen extends GetView<HomeController> {
                 }
               }),
             ],
+          ),
+        ),
           ),
         ),
       ),

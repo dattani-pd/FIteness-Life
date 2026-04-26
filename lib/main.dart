@@ -3,6 +3,7 @@ import 'package:fitness_life/bindings/binding.dart';
 import 'package:fitness_life/controllers/controller.dart';
 import 'package:fitness_life/screen/screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -97,6 +98,28 @@ class MyApp extends StatelessWidget {
       initialBinding: SplashBinding(),
       getPages: appPages,
       debugShowCheckedModeBanner: false,
+      // Fills safe areas / letterboxing on all routes (e.g. iPhone notch & home indicator).
+      builder: (context, child) {
+        final theme = Theme.of(context);
+        final bg = theme.scaffoldBackgroundColor;
+        final isDark = theme.brightness == Brightness.dark;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: bg,
+            systemNavigationBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+            statusBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+            statusBarBrightness:
+                isDark ? Brightness.dark : Brightness.light,
+          ),
+          child: ColoredBox(
+            color: bg,
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
     );
   }
 }
