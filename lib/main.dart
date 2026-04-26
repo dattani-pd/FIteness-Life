@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_life/bindings/binding.dart';
 import 'package:fitness_life/controllers/controller.dart';
 import 'package:fitness_life/screen/screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -28,6 +28,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Enable edge-to-edge rendering so Flutter draws under status bar & home indicator
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   print("🚀 APP STARTING - Main Function Called"); // <--- LOOK FOR THIS IN LOGS
 
@@ -84,6 +87,7 @@ void main() async {
       const Duration(seconds: 5),
       onTimeout: () {
         print('⚠️ GetStorage init timeout, continuing');
+        return false;
       },
     );
 
