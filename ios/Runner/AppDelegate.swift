@@ -46,3 +46,24 @@ import UIKit
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var window: UIWindow?
+
+    func scene(
+        _ scene: UIScene,
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
+    ) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let controller = FlutterViewController(engine: appDelegate.flutterEngine, nibName: nil, bundle: nil)
+
+        // Full-screen window — fixes the black bars on iOS 26
+        let newWindow = UIWindow(windowScene: windowScene)
+        newWindow.rootViewController = controller
+        newWindow.makeKeyAndVisible()
+        self.window = newWindow
+    }
+}
