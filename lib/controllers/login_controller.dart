@@ -28,6 +28,7 @@ class LoginController extends GetxController {
   Future<void> _loadRememberedEmail() async {
     try {
       final email = await sharedPreferencesHelper.getPrefData(_rememberedEmailKey);
+      if (isClosed) return;
       if (email != null && email.isNotEmpty) {
         emailController.text = email;
       }

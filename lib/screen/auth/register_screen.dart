@@ -1,20 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../controllers/register_controller.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For Status Bar control
-import 'package:get/get.dart';
-import '../../controllers/register_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../controllers/register_controller.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-// import 'register_controller.dart'; // તમારી ફાઈલ ઈમ્પોર્ટ કરો
 
 class RegisterScreen extends GetView<RegisterController> {
   static const pageId = "/RegisterScreen";
@@ -33,10 +20,15 @@ class RegisterScreen extends GetView<RegisterController> {
     final Color subTextColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
     final Color borderColor = isDark ? Colors.grey.shade800 : Colors.grey;
 
+    final safe = MediaQuery.of(context).padding;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+        systemNavigationBarColor: bg,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: bg, // ✅ Dynamic Background
@@ -48,10 +40,18 @@ class RegisterScreen extends GetView<RegisterController> {
             onPressed: () => Get.back(),
           ),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
+        body: SizedBox.expand(
+          child: Container(
+            color: bg,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  safe.top + 24,
+                  24,
+                  safe.bottom + 24,
+                ),
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
@@ -171,6 +171,8 @@ class RegisterScreen extends GetView<RegisterController> {
                 const SizedBox(height: 20),
               ],
             ),
+          ),
+        ),
           ),
         ),
       ),
