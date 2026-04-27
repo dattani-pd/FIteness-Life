@@ -9,8 +9,8 @@ class LoginScreen extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    // 🎨 THEME COLORS SETUP
-    final bool isDark = Get.isDarkMode;
+    // Keep this screen light to avoid black background appearance on iOS.
+    const bool isDark = false;
     final Color primaryRed = const Color(0xFF8B0000);
 
     // Backgrounds
@@ -284,12 +284,16 @@ class LoginScreen extends GetView<LoginController> {
           ),
           onPressed: () {
             controller.resetPassword(resetEmailController.text);
+            resetEmailController.dispose();
           },
           child: const Text("Send", style: TextStyle(color: Colors.white)),
         ),
       ),
       cancel: TextButton(
-        onPressed: () => Get.back(),
+        onPressed: () {
+          resetEmailController.dispose();
+          Get.back();
+        },
         child: Text("Cancel", style: TextStyle(color: textColor)),
       ),
     );

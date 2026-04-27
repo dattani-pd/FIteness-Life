@@ -129,9 +129,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Fitness Life',
-      theme: ThemeData.light(), // Define your Light Theme here
-      darkTheme: ThemeData.dark(), // Define your Dark Theme here
-      themeMode: AppConstants.currentThemeMode.value, // ✅ Apply loaded theme
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.light(),
+      themeMode: ThemeMode.light,
       initialRoute: SplashScreen.pageId,
       initialBinding: SplashBinding(),
       getPages: appPages,
