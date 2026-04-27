@@ -70,7 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '845502919168',
     projectId: 'fitness-life-7f19b',
     storageBucket: 'fitness-life-7f19b.firebasestorage.app',
-    iosBundleId: 'com.brisley.fitness_life',
+    iosBundleId: 'com.fitnessislife.app',
   );
 
 }
