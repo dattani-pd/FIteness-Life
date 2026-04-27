@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_life/bindings/binding.dart';
 import 'package:fitness_life/controllers/controller.dart';
 import 'package:fitness_life/screen/screen.dart';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -29,12 +31,18 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ EDGE TO EDGE (MOST IMPORTANT FIX)
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  // Keep iOS in manual mode to avoid black letterboxing around safe areas.
+  if (Platform.isIOS) {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+  } else {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
 
-  // ✅ UI STYLE
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: Colors.white,
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.light,
     systemNavigationBarColor: Colors.white,
