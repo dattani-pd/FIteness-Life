@@ -36,6 +36,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+
 	<!-- URL Scheme -->
 	<key>CFBundleURLTypes</key>
 	<array>

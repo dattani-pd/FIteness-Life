@@ -105,21 +105,9 @@ class MyApp extends StatelessWidget {
         final theme = Theme.of(context);
         final bg = theme.scaffoldBackgroundColor;
         final isDark = theme.brightness == Brightness.dark;
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            systemNavigationBarColor: bg,
-            systemNavigationBarIconBrightness:
-                isDark ? Brightness.light : Brightness.dark,
-            statusBarIconBrightness:
-                isDark ? Brightness.light : Brightness.dark,
-            statusBarBrightness:
-                isDark ? Brightness.dark : Brightness.light,
-          ),
-          child: ColoredBox(
-            color: bg,
-            child: child ?? const SizedBox.shrink(),
-          ),
+        return ColoredBox(
+          color: bg,
+          child: child ?? const SizedBox.shrink(),
         );
       },
     );
