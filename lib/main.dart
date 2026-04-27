@@ -29,10 +29,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Keep standard safe insets on iOS to avoid black areas around status/home indicator.
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+  // ✅ EDGE TO EDGE (MOST IMPORTANT FIX)
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  // Default status/navigation colors for consistent appearance across iOS screens.
+  // ✅ UI STYLE
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
@@ -41,82 +41,38 @@ void main() async {
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
-  print("🚀 APP STARTING - Main Function Called"); // <--- LOOK FOR THIS IN LOGS
-
   try {
-    // 2. Initialize Firebase
     if (Firebase.apps.isEmpty) {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
     }
-    _firebaseReady = true;
-    print('✅ Firebase initialized');
 
-    // 3. Initialize Awesome Notifications
     AwesomeNotifications().initialize(
-        null,
-        [
-          NotificationChannel(
-            channelKey: 'channelKey1', // Match the key in NotificationService
-            channelName: 'Fitness Notifications',
-            channelDescription: 'Notifications for Fitness Life',
-            defaultColor: Colors.teal,
-            ledColor: Colors.red,
-            importance: NotificationImportance.High,
-            channelShowBadge: true,
-            playSound: true,
-            enableVibration: true,
-          )
-        ],
-        debug: true
+      null,
+      [
+        NotificationChannel(
+          channelKey: 'channelKey1',
+          channelName: 'Fitness Notifications',
+          channelDescription: 'Notifications for Fitness Life',
+          importance: NotificationImportance.High,
+        )
+      ],
+      debug: true,
     );
 
-    // 4. Register Background Handler
-    if (_firebaseReady) {
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    }
+    FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler);
 
-    // 5. Other Inits (Your existing code)
-    // await sharedPreferencesHelper.getSharedPreferencesInstance(); // Uncomment if needed
-    await AppConstants.loadFromPrefs().timeout(
-      const Duration(seconds: 5),
-      onTimeout: () {
-        print('⚠️ loadFromPrefs timeout, continuing with defaults');
-      },
-    );
-    await AppConstants.loadTheme().timeout(
-      const Duration(seconds: 5),
-      onTimeout: () {
-        print('⚠️ loadTheme timeout, continuing with defaults');
-      },
-    );
+    await AppConstants.loadFromPrefs();
+    await AppConstants.loadTheme();
+
     Get.put(MuscleWikiController());
-    await GetStorage.init().timeout(
-      const Duration(seconds: 5),
-      onTimeout: () {
-        print('⚠️ GetStorage init timeout, continuing');
-        return false;
-      },
-    );
+    await GetStorage.init();
 
-    print("🚀 APP READY - Running App");
     runApp(const MyApp());
 
-    // 6. Start notifications AFTER first frame (ensures Android Activity exists)
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        await NotificationService().init();
-        print('✅ Notification Service Started');
-      } catch (e) {
-        print('⚠️ Notification Service init failed: $e');
-      }
-    });
-
   } catch (e) {
-    print("❌ CRITICAL ERROR in main: $e");
-    _firebaseReady = false;
-    // Run app anyway so user is not stuck on white/black screen.
     runApp(const MyApp());
   }
 }
