@@ -25,22 +25,34 @@ class LoginScreen extends GetView<LoginController> {
     // Borders
     final Color borderColor = isDark ? Colors.grey.shade800 : Colors.grey;
 
+    final mq = MediaQuery.of(context);
+    final safe = mq.padding;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+        systemNavigationBarColor: bg,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: bg, // ✅ Dynamic Background
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+        body: SizedBox.expand(
+          child: Container(
+            color: bg,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  safe.top + 24,
+                  24,
+                  safe.bottom + 24,
+                ),
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 // --- HEADER ---
                 Center(
                   child: Container(
@@ -211,9 +223,10 @@ class LoginScreen extends GetView<LoginController> {
                     ),
                   ],
                 ),
-                ],
-              ),
+              ],
             ),
+          ),
+        ),
           ),
         ),
       ),

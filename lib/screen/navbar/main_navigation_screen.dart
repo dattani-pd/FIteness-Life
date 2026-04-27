@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,15 +36,32 @@ class MainNavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initialize Controllers
     final navController = Get.put(MainNavigationController());
-    final homeController = Get.put(HomeController());
+    Get.put(HomeController());
 
     // Wrap Scaffold in Obx to listen to theme changes if needed,
     // but Get.changeThemeMode usually handles this globally.
     // Ensure backgroundColor uses context.theme which updates.
-    return Scaffold(
-      backgroundColor: context.theme.scaffoldBackgroundColor,
-      body: Obx(() => _getPage(navController.currentIndex.value)),
-      bottomNavigationBar: Obx(() => _buildBottomNavBar(context, navController)),
+    final shellBg = context.theme.scaffoldBackgroundColor;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: shellBg,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: shellBg,
+        body: SizedBox.expand(
+          child: Container(
+            color: shellBg,
+            child: Obx(() => _getPage(navController.currentIndex.value)),
+          ),
+        ),
+        bottomNavigationBar: Obx(() => _buildBottomNavBar(context, navController)),
+      ),
     );
   }
 
@@ -167,7 +185,7 @@ class ProfileScreen extends StatelessWidget {
           elevation: 0,
           title: Text('Account', style: TextStyle(color: textColor, fontSize: 18, fontWeight: FontWeight.w600)),
           centerTitle: true,
-          iconTheme: IconThemeData(color: textColor),
+          iconTheme: IconThemeData(color: iconColor),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -589,7 +607,7 @@ class _MyProfileDetailScreenState extends State<MyProfileDetailScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    hasTrainer ? (trainerName ?? '') : 'No trainer assigned',
+                    hasTrainer ? trainerName.trim() : 'No trainer assigned',
                     style: TextStyle(
                       color: hasTrainer ? textColor : subText,
                       fontSize: 16,

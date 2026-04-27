@@ -20,9 +20,13 @@ class RegisterScreen extends GetView<RegisterController> {
     final Color subTextColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
     final Color borderColor = isDark ? Colors.grey.shade800 : Colors.grey;
 
+    final safe = MediaQuery.of(context).padding;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
+        systemNavigationBarColor: bg,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
@@ -36,13 +40,20 @@ class RegisterScreen extends GetView<RegisterController> {
             onPressed: () => Get.back(),
           ),
         ),
-        body: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+        body: SizedBox.expand(
+          child: Container(
+            color: bg,
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  safe.top + 24,
+                  24,
+                  safe.bottom + 24,
+                ),
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                 Text(
                   "Join the Movement",
                   style: TextStyle(color: textColor, fontSize: 32, fontWeight: FontWeight.w900), // ✅ Dynamic Text
@@ -158,9 +169,10 @@ class RegisterScreen extends GetView<RegisterController> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                ],
-              ),
+              ],
             ),
+          ),
+        ),
           ),
         ),
       ),

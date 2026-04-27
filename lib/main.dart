@@ -136,6 +136,28 @@ class MyApp extends StatelessWidget {
       initialBinding: SplashBinding(),
       getPages: appPages,
       debugShowCheckedModeBanner: false,
+      // Fills safe areas / letterboxing on all routes (e.g. iPhone notch & home indicator).
+      builder: (context, child) {
+        final theme = Theme.of(context);
+        final bg = theme.scaffoldBackgroundColor;
+        final isDark = theme.brightness == Brightness.dark;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: bg,
+            systemNavigationBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+            statusBarIconBrightness:
+                isDark ? Brightness.light : Brightness.dark,
+            statusBarBrightness:
+                isDark ? Brightness.dark : Brightness.light,
+          ),
+          child: ColoredBox(
+            color: bg,
+            child: child ?? const SizedBox.shrink(),
+          ),
+        );
+      },
     );
   }
 }
