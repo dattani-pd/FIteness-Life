@@ -25,9 +25,6 @@ class LoginScreen extends GetView<LoginController> {
     // Borders
     final Color borderColor = isDark ? Colors.grey.shade800 : Colors.grey;
 
-    final mq = MediaQuery.of(context);
-    final safe = mq.padding;
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -38,21 +35,21 @@ class LoginScreen extends GetView<LoginController> {
       ),
       child: Scaffold(
         backgroundColor: bg, // ✅ Dynamic Background
-        body: SizedBox.expand(
-          child: Container(
-            color: bg,
-            child: Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.fromLTRB(
-                  24,
-                  safe.top + 24,
-                  24,
-                  safe.bottom + 24,
-                ),
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
+        body: Container(
+          color: bg,
+          child: SafeArea(
+            top: false,
+            bottom: false,
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(height: MediaQuery.of(context).padding.top + 24),
                 // --- HEADER ---
                 Center(
                   child: Container(
@@ -223,10 +220,13 @@ class LoginScreen extends GetView<LoginController> {
                     ),
                   ],
                 ),
+                SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
               ],
             ),
           ),
-        ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
