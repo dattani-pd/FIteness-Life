@@ -9,8 +9,6 @@ class LoginScreen extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    const bool isDark = false;
-
     final Color primaryRed = const Color(0xFF8B0000);
     final Color bg = Colors.white; // ✅ Force white for iOS fix
     final Color inputFill = Colors.white;
@@ -30,14 +28,19 @@ class LoginScreen extends GetView<LoginController> {
       ),
       child: Scaffold(
         backgroundColor: bg, // ✅ FIX
-        body: SafeArea(
-          top: true,   // ✅ FIX
-          bottom: true, // ✅ FIX
-          child: LayoutBuilder(
-            builder: (context, constraints) => SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        body: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              24,
+              20,
+              24,
+              MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
