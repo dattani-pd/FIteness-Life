@@ -25,9 +25,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             controller.overrideUserInterfaceStyle = .light
         }
 
+        controller.view.backgroundColor = .white
+        controller.view.isOpaque = true
+
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = controller
         window.backgroundColor = UIColor.white
+        window.isOpaque = true
         window.makeKeyAndVisible()
 
         self.window = window
